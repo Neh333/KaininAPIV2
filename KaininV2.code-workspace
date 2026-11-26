@@ -7,5 +7,24 @@
 			"path": "../KaininStoreSPA"
 		}
 	],
-	"settings": {}
+	"settings": {},
+	"launch": {
+		"version": "0.2.0",
+		"compounds": [
+			{
+				"name": "Launch All Services",
+				"configurations": [
+				{
+					"folder": "KaininAPIV2",
+					"name": "Debug Go API"
+				},
+				{
+					"folder": "KaininStoreSPA",
+					"name": "Frontend (Vite)"
+				}
+				],
+				"stopAll": true
+			}
+		]
+  	}
 }

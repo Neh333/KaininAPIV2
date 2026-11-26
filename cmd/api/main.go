@@ -36,9 +36,14 @@ func main() {
 		logrus.WithError(err).Fatal("Failed to initialize SuperTokens")
 	}
 
+	credential, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		logrus.WithError(err).Fatal("Failed to create the Azure credential")
+	}
+
 	client, err := azsecrets.NewClient(
 		"https://kaininkv.vault.azure.net/",
-		&azidentity.DefaultAzureCredential{},
+		credential,
 		nil,
 	)
 	if err != nil {
@@ -69,7 +74,9 @@ func main() {
 	if apiVersion == "" {
 		apiVersion = "1.0.0"
 	}
-	api := humachi.New(router, huma.DefaultConfig("Kainin API", apiVersion))
+	apiConfig := huma.DefaultConfig("Kainin API", apiVersion)
+	apiConfig.DocsRenderer = huma.DocsRendererScalar
+	api := humachi.New(router, apiConfig)
 	resources.RegisterRoutes(api, db)
 	squarehandler.RegisterRoutes(
 		router,

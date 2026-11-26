@@ -29,40 +29,46 @@ Adding a new domain should feel repeatable: create a small slice in transport/se
 - **API ergonomics**: standardized JSON success/error envelopes
 - **Ops/dev**: Docker Compose (DB + RabbitMQ), Air hot-reload, `golangci-lint`
 
-## Quickstart (local dev)
+## Run the HTTP API
 
-Prereqs: Go (see `go.mod`), Docker (recommended for DB/queue).
+Prerequisites: Go 1.26.10, a running SuperTokens Core instance, and Azure credentials
+with permission to read the `KaininStoreUSDBConnString` secret from the
+`kaininkv` Key Vault. The `cmd/api` entrypoint uses that SQL Server connection
+string; the Postgres service and migration runner below are separate template
+infrastructure and do not provide the database for this API entrypoint.
 
-1. Create env file:
+1. Create and configure the environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-2. Start dependencies:
+Set `SUPERTOKENS_CONNECTION_URI`, `SUPERTOKENS_APP_NAME`,
+`SUPERTOKENS_API_DOMAIN`, and `SUPERTOKENS_WEBSITE_DOMAIN` in `.env`. For a local
+frontend, use `http://localhost:8080` as the API domain and the Vite origin as the
+website domain. Set `PORT=8080` and include the frontend origin in
+`ALLOWED_ORIGINS`.
+
+2. Authenticate with Azure using an identity that can read the connection-string
+secret:
 
 ```bash
-docker compose up
+az login
 ```
 
-3. Run migrations:
+3. Start the API:
 
 ```bash
-go run cmd/migration/main.go -envfilename=.env
+go run ./cmd/api
 ```
 
-4. Run the API:
+## API docs and testing
 
-```bash
-go run cmd/api/main.go
-```
-
-Optional hot reload:
-
-```bash
-go install github.com/cosmtrek/air@latest
-air
-```
+The interactive API reference is Scalar at `http://localhost:8080/docs`; the
+OpenAPI document is at `http://localhost:8080/openapi.json`. Scalar loads its UI
+from a CDN, so the browser needs internet access. Public catalog reads can be
+tested without signing in, for example `GET /api/products`; write operations
+require the appropriate SuperTokens session and permissions.
 
 ## Configuration
 
@@ -89,7 +95,7 @@ If you run services outside Docker, switch hosts to `localhost`.
 
 The API registers typed Huma operations in `internal/transport/http/resources`. Request and response DTOs are kept separate from GORM models; responses omit authentication identifiers and newsletter verification tokens. SuperTokens sessions protect private routes. Catalog reads are public, bag operations are scoped to the signed-in user, and administrative writes require `User.IsAdmin`.
 
-Huma serves the OpenAPI document at `/openapi.json` and the interactive docs at `/docs`. Configure `ALLOWED_ORIGINS` with the exact React app origin. For example:
+Huma serves the OpenAPI document at `/openapi.json` and Scalar at `/docs`. Configure `ALLOWED_ORIGINS` with the exact React app origin. For example:
 
 ```ts
 const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {

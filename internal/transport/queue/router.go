@@ -2,7 +2,7 @@ package queueTransport
 
 import (
 	"context"
-	"go-api-template/internal/libs/queue"
+	"github.com/neh333/KaininAPIV2/internal/libs/queue"
 )
 
 type Router struct {

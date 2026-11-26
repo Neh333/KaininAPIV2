@@ -2,9 +2,9 @@ package queueTransport
 
 import (
 	"context"
-	"go-api-template/config"
-	"go-api-template/internal/libs/queue"
-	"go-api-template/internal/service"
+	"github.com/neh333/KaininAPIV2/config"
+	"github.com/neh333/KaininAPIV2/internal/libs/queue"
+	"github.com/neh333/KaininAPIV2/internal/service"
 )
 
 type QueueTransport struct {

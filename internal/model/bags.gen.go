@@ -15,15 +15,13 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"go-api-template/internal/model"
 )
 
 func newBag(db *gorm.DB, opts ...gen.DOOption) bag {
 	_bag := bag{}
 
 	_bag.bagDo.UseDB(db, opts...)
-	_bag.bagDo.UseModel(&model.Bag{})
+	_bag.bagDo.UseModel(&Bag{})
 
 	tableName := _bag.bagDo.TableName()
 	_bag.ALL = field.NewAsterisk(tableName)
@@ -204,57 +202,57 @@ func (b bagDo) Unscoped() *bagDo {
 	return b.withDO(b.DO.Unscoped())
 }
 
-func (b bagDo) Create(values ...*model.Bag) error {
+func (b bagDo) Create(values ...*Bag) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return b.DO.Create(values)
 }
 
-func (b bagDo) CreateInBatches(values []*model.Bag, batchSize int) error {
+func (b bagDo) CreateInBatches(values []*Bag, batchSize int) error {
 	return b.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (b bagDo) Save(values ...*model.Bag) error {
+func (b bagDo) Save(values ...*Bag) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return b.DO.Save(values)
 }
 
-func (b bagDo) First() (*model.Bag, error) {
+func (b bagDo) First() (*Bag, error) {
 	if result, err := b.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Bag), nil
+		return result.(*Bag), nil
 	}
 }
 
-func (b bagDo) Take() (*model.Bag, error) {
+func (b bagDo) Take() (*Bag, error) {
 	if result, err := b.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Bag), nil
+		return result.(*Bag), nil
 	}
 }
 
-func (b bagDo) Last() (*model.Bag, error) {
+func (b bagDo) Last() (*Bag, error) {
 	if result, err := b.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Bag), nil
+		return result.(*Bag), nil
 	}
 }
 
-func (b bagDo) Find() ([]*model.Bag, error) {
+func (b bagDo) Find() ([]*Bag, error) {
 	result, err := b.DO.Find()
-	return result.([]*model.Bag), err
+	return result.([]*Bag), err
 }
 
-func (b bagDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Bag, err error) {
-	buf := make([]*model.Bag, 0, batchSize)
+func (b bagDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*Bag, err error) {
+	buf := make([]*Bag, 0, batchSize)
 	err = b.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -262,7 +260,7 @@ func (b bagDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) 
 	return results, err
 }
 
-func (b bagDo) FindInBatches(result *[]*model.Bag, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (b bagDo) FindInBatches(result *[]*Bag, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return b.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -288,23 +286,23 @@ func (b bagDo) Preload(fields ...field.RelationField) *bagDo {
 	return &b
 }
 
-func (b bagDo) FirstOrInit() (*model.Bag, error) {
+func (b bagDo) FirstOrInit() (*Bag, error) {
 	if result, err := b.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Bag), nil
+		return result.(*Bag), nil
 	}
 }
 
-func (b bagDo) FirstOrCreate() (*model.Bag, error) {
+func (b bagDo) FirstOrCreate() (*Bag, error) {
 	if result, err := b.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Bag), nil
+		return result.(*Bag), nil
 	}
 }
 
-func (b bagDo) FindByPage(offset int, limit int) (result []*model.Bag, count int64, err error) {
+func (b bagDo) FindByPage(offset int, limit int) (result []*Bag, count int64, err error) {
 	result, err = b.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -333,7 +331,7 @@ func (b bagDo) Scan(result interface{}) (err error) {
 	return b.DO.Scan(result)
 }
 
-func (b bagDo) Delete(models ...*model.Bag) (result gen.ResultInfo, err error) {
+func (b bagDo) Delete(models ...*Bag) (result gen.ResultInfo, err error) {
 	return b.DO.Delete(models)
 }
 

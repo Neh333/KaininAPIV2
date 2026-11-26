@@ -1,9 +1,9 @@
 package usersHttpTransport
 
 import (
-	"go-api-template/internal/libs/renderer"
-	"go-api-template/internal/libs/utils"
-	"go-api-template/internal/service"
+	"github.com/neh333/KaininAPIV2/internal/libs/renderer"
+	"github.com/neh333/KaininAPIV2/internal/libs/utils"
+	"github.com/neh333/KaininAPIV2/internal/service"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"

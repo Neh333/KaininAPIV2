@@ -15,15 +15,13 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"go-api-template/internal/model"
 )
 
 func newBagItem(db *gorm.DB, opts ...gen.DOOption) bagItem {
 	_bagItem := bagItem{}
 
 	_bagItem.bagItemDo.UseDB(db, opts...)
-	_bagItem.bagItemDo.UseModel(&model.BagItem{})
+	_bagItem.bagItemDo.UseModel(&BagItem{})
 
 	tableName := _bagItem.bagItemDo.TableName()
 	_bagItem.ALL = field.NewAsterisk(tableName)
@@ -196,57 +194,57 @@ func (b bagItemDo) Unscoped() *bagItemDo {
 	return b.withDO(b.DO.Unscoped())
 }
 
-func (b bagItemDo) Create(values ...*model.BagItem) error {
+func (b bagItemDo) Create(values ...*BagItem) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return b.DO.Create(values)
 }
 
-func (b bagItemDo) CreateInBatches(values []*model.BagItem, batchSize int) error {
+func (b bagItemDo) CreateInBatches(values []*BagItem, batchSize int) error {
 	return b.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (b bagItemDo) Save(values ...*model.BagItem) error {
+func (b bagItemDo) Save(values ...*BagItem) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return b.DO.Save(values)
 }
 
-func (b bagItemDo) First() (*model.BagItem, error) {
+func (b bagItemDo) First() (*BagItem, error) {
 	if result, err := b.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.BagItem), nil
+		return result.(*BagItem), nil
 	}
 }
 
-func (b bagItemDo) Take() (*model.BagItem, error) {
+func (b bagItemDo) Take() (*BagItem, error) {
 	if result, err := b.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.BagItem), nil
+		return result.(*BagItem), nil
 	}
 }
 
-func (b bagItemDo) Last() (*model.BagItem, error) {
+func (b bagItemDo) Last() (*BagItem, error) {
 	if result, err := b.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.BagItem), nil
+		return result.(*BagItem), nil
 	}
 }
 
-func (b bagItemDo) Find() ([]*model.BagItem, error) {
+func (b bagItemDo) Find() ([]*BagItem, error) {
 	result, err := b.DO.Find()
-	return result.([]*model.BagItem), err
+	return result.([]*BagItem), err
 }
 
-func (b bagItemDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.BagItem, err error) {
-	buf := make([]*model.BagItem, 0, batchSize)
+func (b bagItemDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*BagItem, err error) {
+	buf := make([]*BagItem, 0, batchSize)
 	err = b.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -254,7 +252,7 @@ func (b bagItemDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) err
 	return results, err
 }
 
-func (b bagItemDo) FindInBatches(result *[]*model.BagItem, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (b bagItemDo) FindInBatches(result *[]*BagItem, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return b.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -280,23 +278,23 @@ func (b bagItemDo) Preload(fields ...field.RelationField) *bagItemDo {
 	return &b
 }
 
-func (b bagItemDo) FirstOrInit() (*model.BagItem, error) {
+func (b bagItemDo) FirstOrInit() (*BagItem, error) {
 	if result, err := b.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.BagItem), nil
+		return result.(*BagItem), nil
 	}
 }
 
-func (b bagItemDo) FirstOrCreate() (*model.BagItem, error) {
+func (b bagItemDo) FirstOrCreate() (*BagItem, error) {
 	if result, err := b.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.BagItem), nil
+		return result.(*BagItem), nil
 	}
 }
 
-func (b bagItemDo) FindByPage(offset int, limit int) (result []*model.BagItem, count int64, err error) {
+func (b bagItemDo) FindByPage(offset int, limit int) (result []*BagItem, count int64, err error) {
 	result, err = b.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -325,7 +323,7 @@ func (b bagItemDo) Scan(result interface{}) (err error) {
 	return b.DO.Scan(result)
 }
 
-func (b bagItemDo) Delete(models ...*model.BagItem) (result gen.ResultInfo, err error) {
+func (b bagItemDo) Delete(models ...*BagItem) (result gen.ResultInfo, err error) {
 	return b.DO.Delete(models)
 }
 

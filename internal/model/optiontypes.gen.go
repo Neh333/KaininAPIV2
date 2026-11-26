@@ -15,15 +15,13 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"go-api-template/internal/model"
 )
 
 func newOptionType(db *gorm.DB, opts ...gen.DOOption) optionType {
 	_optionType := optionType{}
 
 	_optionType.optionTypeDo.UseDB(db, opts...)
-	_optionType.optionTypeDo.UseModel(&model.OptionType{})
+	_optionType.optionTypeDo.UseModel(&OptionType{})
 
 	tableName := _optionType.optionTypeDo.TableName()
 	_optionType.ALL = field.NewAsterisk(tableName)
@@ -194,57 +192,57 @@ func (o optionTypeDo) Unscoped() *optionTypeDo {
 	return o.withDO(o.DO.Unscoped())
 }
 
-func (o optionTypeDo) Create(values ...*model.OptionType) error {
+func (o optionTypeDo) Create(values ...*OptionType) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return o.DO.Create(values)
 }
 
-func (o optionTypeDo) CreateInBatches(values []*model.OptionType, batchSize int) error {
+func (o optionTypeDo) CreateInBatches(values []*OptionType, batchSize int) error {
 	return o.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (o optionTypeDo) Save(values ...*model.OptionType) error {
+func (o optionTypeDo) Save(values ...*OptionType) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return o.DO.Save(values)
 }
 
-func (o optionTypeDo) First() (*model.OptionType, error) {
+func (o optionTypeDo) First() (*OptionType, error) {
 	if result, err := o.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OptionType), nil
+		return result.(*OptionType), nil
 	}
 }
 
-func (o optionTypeDo) Take() (*model.OptionType, error) {
+func (o optionTypeDo) Take() (*OptionType, error) {
 	if result, err := o.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OptionType), nil
+		return result.(*OptionType), nil
 	}
 }
 
-func (o optionTypeDo) Last() (*model.OptionType, error) {
+func (o optionTypeDo) Last() (*OptionType, error) {
 	if result, err := o.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OptionType), nil
+		return result.(*OptionType), nil
 	}
 }
 
-func (o optionTypeDo) Find() ([]*model.OptionType, error) {
+func (o optionTypeDo) Find() ([]*OptionType, error) {
 	result, err := o.DO.Find()
-	return result.([]*model.OptionType), err
+	return result.([]*OptionType), err
 }
 
-func (o optionTypeDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.OptionType, err error) {
-	buf := make([]*model.OptionType, 0, batchSize)
+func (o optionTypeDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*OptionType, err error) {
+	buf := make([]*OptionType, 0, batchSize)
 	err = o.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -252,7 +250,7 @@ func (o optionTypeDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) 
 	return results, err
 }
 
-func (o optionTypeDo) FindInBatches(result *[]*model.OptionType, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (o optionTypeDo) FindInBatches(result *[]*OptionType, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return o.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -278,23 +276,23 @@ func (o optionTypeDo) Preload(fields ...field.RelationField) *optionTypeDo {
 	return &o
 }
 
-func (o optionTypeDo) FirstOrInit() (*model.OptionType, error) {
+func (o optionTypeDo) FirstOrInit() (*OptionType, error) {
 	if result, err := o.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OptionType), nil
+		return result.(*OptionType), nil
 	}
 }
 
-func (o optionTypeDo) FirstOrCreate() (*model.OptionType, error) {
+func (o optionTypeDo) FirstOrCreate() (*OptionType, error) {
 	if result, err := o.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OptionType), nil
+		return result.(*OptionType), nil
 	}
 }
 
-func (o optionTypeDo) FindByPage(offset int, limit int) (result []*model.OptionType, count int64, err error) {
+func (o optionTypeDo) FindByPage(offset int, limit int) (result []*OptionType, count int64, err error) {
 	result, err = o.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -323,7 +321,7 @@ func (o optionTypeDo) Scan(result interface{}) (err error) {
 	return o.DO.Scan(result)
 }
 
-func (o optionTypeDo) Delete(models ...*model.OptionType) (result gen.ResultInfo, err error) {
+func (o optionTypeDo) Delete(models ...*OptionType) (result gen.ResultInfo, err error) {
 	return o.DO.Delete(models)
 }
 

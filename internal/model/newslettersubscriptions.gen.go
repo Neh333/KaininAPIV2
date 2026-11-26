@@ -15,15 +15,13 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"go-api-template/internal/model"
 )
 
 func newNewsletterSubscription(db *gorm.DB, opts ...gen.DOOption) newsletterSubscription {
 	_newsletterSubscription := newsletterSubscription{}
 
 	_newsletterSubscription.newsletterSubscriptionDo.UseDB(db, opts...)
-	_newsletterSubscription.newsletterSubscriptionDo.UseModel(&model.NewsletterSubscription{})
+	_newsletterSubscription.newsletterSubscriptionDo.UseModel(&NewsletterSubscription{})
 
 	tableName := _newsletterSubscription.newsletterSubscriptionDo.TableName()
 	_newsletterSubscription.ALL = field.NewAsterisk(tableName)
@@ -212,57 +210,57 @@ func (n newsletterSubscriptionDo) Unscoped() *newsletterSubscriptionDo {
 	return n.withDO(n.DO.Unscoped())
 }
 
-func (n newsletterSubscriptionDo) Create(values ...*model.NewsletterSubscription) error {
+func (n newsletterSubscriptionDo) Create(values ...*NewsletterSubscription) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return n.DO.Create(values)
 }
 
-func (n newsletterSubscriptionDo) CreateInBatches(values []*model.NewsletterSubscription, batchSize int) error {
+func (n newsletterSubscriptionDo) CreateInBatches(values []*NewsletterSubscription, batchSize int) error {
 	return n.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (n newsletterSubscriptionDo) Save(values ...*model.NewsletterSubscription) error {
+func (n newsletterSubscriptionDo) Save(values ...*NewsletterSubscription) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return n.DO.Save(values)
 }
 
-func (n newsletterSubscriptionDo) First() (*model.NewsletterSubscription, error) {
+func (n newsletterSubscriptionDo) First() (*NewsletterSubscription, error) {
 	if result, err := n.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.NewsletterSubscription), nil
+		return result.(*NewsletterSubscription), nil
 	}
 }
 
-func (n newsletterSubscriptionDo) Take() (*model.NewsletterSubscription, error) {
+func (n newsletterSubscriptionDo) Take() (*NewsletterSubscription, error) {
 	if result, err := n.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.NewsletterSubscription), nil
+		return result.(*NewsletterSubscription), nil
 	}
 }
 
-func (n newsletterSubscriptionDo) Last() (*model.NewsletterSubscription, error) {
+func (n newsletterSubscriptionDo) Last() (*NewsletterSubscription, error) {
 	if result, err := n.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.NewsletterSubscription), nil
+		return result.(*NewsletterSubscription), nil
 	}
 }
 
-func (n newsletterSubscriptionDo) Find() ([]*model.NewsletterSubscription, error) {
+func (n newsletterSubscriptionDo) Find() ([]*NewsletterSubscription, error) {
 	result, err := n.DO.Find()
-	return result.([]*model.NewsletterSubscription), err
+	return result.([]*NewsletterSubscription), err
 }
 
-func (n newsletterSubscriptionDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.NewsletterSubscription, err error) {
-	buf := make([]*model.NewsletterSubscription, 0, batchSize)
+func (n newsletterSubscriptionDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*NewsletterSubscription, err error) {
+	buf := make([]*NewsletterSubscription, 0, batchSize)
 	err = n.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -270,7 +268,7 @@ func (n newsletterSubscriptionDo) FindInBatch(batchSize int, fc func(tx gen.Dao,
 	return results, err
 }
 
-func (n newsletterSubscriptionDo) FindInBatches(result *[]*model.NewsletterSubscription, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (n newsletterSubscriptionDo) FindInBatches(result *[]*NewsletterSubscription, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return n.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -296,23 +294,23 @@ func (n newsletterSubscriptionDo) Preload(fields ...field.RelationField) *newsle
 	return &n
 }
 
-func (n newsletterSubscriptionDo) FirstOrInit() (*model.NewsletterSubscription, error) {
+func (n newsletterSubscriptionDo) FirstOrInit() (*NewsletterSubscription, error) {
 	if result, err := n.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.NewsletterSubscription), nil
+		return result.(*NewsletterSubscription), nil
 	}
 }
 
-func (n newsletterSubscriptionDo) FirstOrCreate() (*model.NewsletterSubscription, error) {
+func (n newsletterSubscriptionDo) FirstOrCreate() (*NewsletterSubscription, error) {
 	if result, err := n.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.NewsletterSubscription), nil
+		return result.(*NewsletterSubscription), nil
 	}
 }
 
-func (n newsletterSubscriptionDo) FindByPage(offset int, limit int) (result []*model.NewsletterSubscription, count int64, err error) {
+func (n newsletterSubscriptionDo) FindByPage(offset int, limit int) (result []*NewsletterSubscription, count int64, err error) {
 	result, err = n.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -341,7 +339,7 @@ func (n newsletterSubscriptionDo) Scan(result interface{}) (err error) {
 	return n.DO.Scan(result)
 }
 
-func (n newsletterSubscriptionDo) Delete(models ...*model.NewsletterSubscription) (result gen.ResultInfo, err error) {
+func (n newsletterSubscriptionDo) Delete(models ...*NewsletterSubscription) (result gen.ResultInfo, err error) {
 	return n.DO.Delete(models)
 }
 

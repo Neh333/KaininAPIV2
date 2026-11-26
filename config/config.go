@@ -2,7 +2,7 @@ package config
 
 import (
 	"flag"
-	"go-api-template/internal/libs/utils"
+	"github.com/neh333/KaininAPIV2/internal/libs/utils"
 	"os"
 	"strings"
 
@@ -30,6 +30,14 @@ type ConfigSchema struct {
 
 	DevBaseURL  string
 	ProdBaseURL string
+
+	SupertokensConnectionURI string
+	SupertokensAPIKey        string
+	SupertokensAppName       string
+	SupertokensAPIDomain     string
+	SupertokensWebsiteDomain string
+	SupertokensAPIBasePath   string
+	SupertokensWebBasePath   string
 
 	// Database
 	DbHost     string
@@ -69,6 +77,9 @@ type ConfigSchema struct {
 	// Stripe
 	StripeKey            string
 	StripeEndpointSecret string
+	// Square
+	SquareWebhookSignatureKey    string
+	SquareWebhookNotificationURL string
 
 	// Google
 	GoogleApi          string
@@ -92,11 +103,18 @@ func LoadConfig() (ConfigSchema, error) {
 	}
 
 	config := ConfigSchema{
-		Env:         EnvType(strings.ToUpper(os.Getenv("ENV"))),
-		Port:        os.Getenv("PORT"),
-		Version:     os.Getenv("VERSION"),
-		DevBaseURL:  os.Getenv("DEV_BASE_URL"),
-		ProdBaseURL: os.Getenv("PROD_BASE_URL"),
+		Env:                      EnvType(strings.ToUpper(os.Getenv("ENV"))),
+		Port:                     os.Getenv("PORT"),
+		Version:                  os.Getenv("VERSION"),
+		DevBaseURL:               os.Getenv("DEV_BASE_URL"),
+		ProdBaseURL:              os.Getenv("PROD_BASE_URL"),
+		SupertokensConnectionURI: os.Getenv("SUPERTOKENS_CONNECTION_URI"),
+		SupertokensAPIKey:        os.Getenv("SUPERTOKENS_API_KEY"),
+		SupertokensAppName:       os.Getenv("SUPERTOKENS_APP_NAME"),
+		SupertokensAPIDomain:     os.Getenv("SUPERTOKENS_API_DOMAIN"),
+		SupertokensWebsiteDomain: os.Getenv("SUPERTOKENS_WEBSITE_DOMAIN"),
+		SupertokensAPIBasePath:   os.Getenv("SUPERTOKENS_API_BASE_PATH"),
+		SupertokensWebBasePath:   os.Getenv("SUPERTOKENS_WEBSITE_BASE_PATH"),
 
 		AllowedOrigins: utils.ParseCsvLine(os.Getenv("ALLOWED_ORIGINS")),
 
@@ -125,8 +143,10 @@ func LoadConfig() (ConfigSchema, error) {
 		MailgunApiKey: os.Getenv("MAILGUN_API_KEY"),
 		EmailHello:    os.Getenv("EMAIL_HELLO"),
 
-		StripeKey:            os.Getenv("STRIPE_KEY"),
-		StripeEndpointSecret: os.Getenv("STRIPE_ENDPOINT_SECRET"),
+		StripeKey:                    os.Getenv("STRIPE_KEY"),
+		StripeEndpointSecret:         os.Getenv("STRIPE_ENDPOINT_SECRET"),
+		SquareWebhookSignatureKey:    os.Getenv("SQUARE_WEBHOOK_SIGNATURE_KEY"),
+		SquareWebhookNotificationURL: os.Getenv("SQUARE_WEBHOOK_NOTIFICATION_URL"),
 
 		GoogleApi:          os.Getenv("GOOGLE_API"),
 		GoogleClientId:     os.Getenv("GOOGLE_CLIENT_ID"),

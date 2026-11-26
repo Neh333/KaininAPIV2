@@ -15,15 +15,13 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"go-api-template/internal/model"
 )
 
 func newProductVariation(db *gorm.DB, opts ...gen.DOOption) productVariation {
 	_productVariation := productVariation{}
 
 	_productVariation.productVariationDo.UseDB(db, opts...)
-	_productVariation.productVariationDo.UseModel(&model.ProductVariation{})
+	_productVariation.productVariationDo.UseModel(&ProductVariation{})
 
 	tableName := _productVariation.productVariationDo.TableName()
 	_productVariation.ALL = field.NewAsterisk(tableName)
@@ -224,57 +222,57 @@ func (p productVariationDo) Unscoped() *productVariationDo {
 	return p.withDO(p.DO.Unscoped())
 }
 
-func (p productVariationDo) Create(values ...*model.ProductVariation) error {
+func (p productVariationDo) Create(values ...*ProductVariation) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return p.DO.Create(values)
 }
 
-func (p productVariationDo) CreateInBatches(values []*model.ProductVariation, batchSize int) error {
+func (p productVariationDo) CreateInBatches(values []*ProductVariation, batchSize int) error {
 	return p.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (p productVariationDo) Save(values ...*model.ProductVariation) error {
+func (p productVariationDo) Save(values ...*ProductVariation) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return p.DO.Save(values)
 }
 
-func (p productVariationDo) First() (*model.ProductVariation, error) {
+func (p productVariationDo) First() (*ProductVariation, error) {
 	if result, err := p.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.ProductVariation), nil
+		return result.(*ProductVariation), nil
 	}
 }
 
-func (p productVariationDo) Take() (*model.ProductVariation, error) {
+func (p productVariationDo) Take() (*ProductVariation, error) {
 	if result, err := p.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.ProductVariation), nil
+		return result.(*ProductVariation), nil
 	}
 }
 
-func (p productVariationDo) Last() (*model.ProductVariation, error) {
+func (p productVariationDo) Last() (*ProductVariation, error) {
 	if result, err := p.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.ProductVariation), nil
+		return result.(*ProductVariation), nil
 	}
 }
 
-func (p productVariationDo) Find() ([]*model.ProductVariation, error) {
+func (p productVariationDo) Find() ([]*ProductVariation, error) {
 	result, err := p.DO.Find()
-	return result.([]*model.ProductVariation), err
+	return result.([]*ProductVariation), err
 }
 
-func (p productVariationDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.ProductVariation, err error) {
-	buf := make([]*model.ProductVariation, 0, batchSize)
+func (p productVariationDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*ProductVariation, err error) {
+	buf := make([]*ProductVariation, 0, batchSize)
 	err = p.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -282,7 +280,7 @@ func (p productVariationDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch
 	return results, err
 }
 
-func (p productVariationDo) FindInBatches(result *[]*model.ProductVariation, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (p productVariationDo) FindInBatches(result *[]*ProductVariation, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return p.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -308,23 +306,23 @@ func (p productVariationDo) Preload(fields ...field.RelationField) *productVaria
 	return &p
 }
 
-func (p productVariationDo) FirstOrInit() (*model.ProductVariation, error) {
+func (p productVariationDo) FirstOrInit() (*ProductVariation, error) {
 	if result, err := p.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.ProductVariation), nil
+		return result.(*ProductVariation), nil
 	}
 }
 
-func (p productVariationDo) FirstOrCreate() (*model.ProductVariation, error) {
+func (p productVariationDo) FirstOrCreate() (*ProductVariation, error) {
 	if result, err := p.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.ProductVariation), nil
+		return result.(*ProductVariation), nil
 	}
 }
 
-func (p productVariationDo) FindByPage(offset int, limit int) (result []*model.ProductVariation, count int64, err error) {
+func (p productVariationDo) FindByPage(offset int, limit int) (result []*ProductVariation, count int64, err error) {
 	result, err = p.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -353,7 +351,7 @@ func (p productVariationDo) Scan(result interface{}) (err error) {
 	return p.DO.Scan(result)
 }
 
-func (p productVariationDo) Delete(models ...*model.ProductVariation) (result gen.ResultInfo, err error) {
+func (p productVariationDo) Delete(models ...*ProductVariation) (result gen.ResultInfo, err error) {
 	return p.DO.Delete(models)
 }
 

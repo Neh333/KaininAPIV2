@@ -15,15 +15,13 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"go-api-template/internal/model"
 )
 
 func newLoginMethod(db *gorm.DB, opts ...gen.DOOption) loginMethod {
 	_loginMethod := loginMethod{}
 
 	_loginMethod.loginMethodDo.UseDB(db, opts...)
-	_loginMethod.loginMethodDo.UseModel(&model.LoginMethod{})
+	_loginMethod.loginMethodDo.UseModel(&LoginMethod{})
 
 	tableName := _loginMethod.loginMethodDo.TableName()
 	_loginMethod.ALL = field.NewAsterisk(tableName)
@@ -210,57 +208,57 @@ func (l loginMethodDo) Unscoped() *loginMethodDo {
 	return l.withDO(l.DO.Unscoped())
 }
 
-func (l loginMethodDo) Create(values ...*model.LoginMethod) error {
+func (l loginMethodDo) Create(values ...*LoginMethod) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return l.DO.Create(values)
 }
 
-func (l loginMethodDo) CreateInBatches(values []*model.LoginMethod, batchSize int) error {
+func (l loginMethodDo) CreateInBatches(values []*LoginMethod, batchSize int) error {
 	return l.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (l loginMethodDo) Save(values ...*model.LoginMethod) error {
+func (l loginMethodDo) Save(values ...*LoginMethod) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return l.DO.Save(values)
 }
 
-func (l loginMethodDo) First() (*model.LoginMethod, error) {
+func (l loginMethodDo) First() (*LoginMethod, error) {
 	if result, err := l.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LoginMethod), nil
+		return result.(*LoginMethod), nil
 	}
 }
 
-func (l loginMethodDo) Take() (*model.LoginMethod, error) {
+func (l loginMethodDo) Take() (*LoginMethod, error) {
 	if result, err := l.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LoginMethod), nil
+		return result.(*LoginMethod), nil
 	}
 }
 
-func (l loginMethodDo) Last() (*model.LoginMethod, error) {
+func (l loginMethodDo) Last() (*LoginMethod, error) {
 	if result, err := l.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LoginMethod), nil
+		return result.(*LoginMethod), nil
 	}
 }
 
-func (l loginMethodDo) Find() ([]*model.LoginMethod, error) {
+func (l loginMethodDo) Find() ([]*LoginMethod, error) {
 	result, err := l.DO.Find()
-	return result.([]*model.LoginMethod), err
+	return result.([]*LoginMethod), err
 }
 
-func (l loginMethodDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.LoginMethod, err error) {
-	buf := make([]*model.LoginMethod, 0, batchSize)
+func (l loginMethodDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*LoginMethod, err error) {
+	buf := make([]*LoginMethod, 0, batchSize)
 	err = l.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -268,7 +266,7 @@ func (l loginMethodDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int)
 	return results, err
 }
 
-func (l loginMethodDo) FindInBatches(result *[]*model.LoginMethod, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (l loginMethodDo) FindInBatches(result *[]*LoginMethod, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return l.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -294,23 +292,23 @@ func (l loginMethodDo) Preload(fields ...field.RelationField) *loginMethodDo {
 	return &l
 }
 
-func (l loginMethodDo) FirstOrInit() (*model.LoginMethod, error) {
+func (l loginMethodDo) FirstOrInit() (*LoginMethod, error) {
 	if result, err := l.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LoginMethod), nil
+		return result.(*LoginMethod), nil
 	}
 }
 
-func (l loginMethodDo) FirstOrCreate() (*model.LoginMethod, error) {
+func (l loginMethodDo) FirstOrCreate() (*LoginMethod, error) {
 	if result, err := l.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.LoginMethod), nil
+		return result.(*LoginMethod), nil
 	}
 }
 
-func (l loginMethodDo) FindByPage(offset int, limit int) (result []*model.LoginMethod, count int64, err error) {
+func (l loginMethodDo) FindByPage(offset int, limit int) (result []*LoginMethod, count int64, err error) {
 	result, err = l.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -339,7 +337,7 @@ func (l loginMethodDo) Scan(result interface{}) (err error) {
 	return l.DO.Scan(result)
 }
 
-func (l loginMethodDo) Delete(models ...*model.LoginMethod) (result gen.ResultInfo, err error) {
+func (l loginMethodDo) Delete(models ...*LoginMethod) (result gen.ResultInfo, err error) {
 	return l.DO.Delete(models)
 }
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"go-api-template/config"
-	"go-api-template/internal/libs/database"
+	"github.com/neh333/KaininAPIV2/config"
+	"github.com/neh333/KaininAPIV2/internal/libs/database"
 	"os"
 
 	"github.com/sirupsen/logrus"

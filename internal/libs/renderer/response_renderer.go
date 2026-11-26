@@ -2,7 +2,7 @@ package renderer
 
 import (
 	"errors"
-	errs "go-api-template/internal/errors"
+	errs "github.com/neh333/KaininAPIV2/internal/errors"
 	"net/http"
 	"time"
 

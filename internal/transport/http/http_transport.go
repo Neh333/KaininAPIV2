@@ -1,9 +1,9 @@
 package httpTransport
 
 import (
-	"go-api-template/internal/libs/renderer"
-	"go-api-template/internal/service"
-	usersHttpTransport "go-api-template/internal/transport/http/users"
+	"github.com/neh333/KaininAPIV2/internal/libs/renderer"
+	"github.com/neh333/KaininAPIV2/internal/service"
+	usersHttpTransport "github.com/neh333/KaininAPIV2/internal/transport/http/users"
 )
 
 type HTTPTransport struct {

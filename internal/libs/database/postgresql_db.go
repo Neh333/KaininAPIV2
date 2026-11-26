@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"go-api-template/config"
+	"github.com/neh333/KaininAPIV2/config"
 
 	"github.com/golang-migrate/migrate"
 	"github.com/golang-migrate/migrate/database/postgres"

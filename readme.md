@@ -69,6 +69,9 @@ air
 Create `.env` from `.env.example`. Minimum keys to boot:
 
 - **App**: `ENV`, `PORT`, `VERSION`, `ALLOWED_ORIGINS`
+- **SuperTokens**: `SUPERTOKENS_CONNECTION_URI`, `SUPERTOKENS_APP_NAME`, `SUPERTOKENS_API_DOMAIN`, `SUPERTOKENS_WEBSITE_DOMAIN`
+- **SuperTokens (optional)**: `SUPERTOKENS_API_KEY`, `SUPERTOKENS_API_BASE_PATH`, `SUPERTOKENS_WEBSITE_BASE_PATH`
+- **Square webhook (optional)**: `SQUARE_WEBHOOK_SIGNATURE_KEY`, `SQUARE_WEBHOOK_NOTIFICATION_URL`
 - **Database**: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
 - **RabbitMQ (optional)**:
   - `RABBITMQ_ENABLED` (`true|false`)
@@ -81,6 +84,26 @@ Docker-first defaults (used by `docker-compose.yml`):
 - `RABBITMQ_URL=amqp://guest:guest@go-api-template-rabbitmq:5672/`
 
 If you run services outside Docker, switch hosts to `localhost`.
+
+## Huma CRUD API
+
+The API registers typed Huma operations in `internal/transport/http/resources`. Request and response DTOs are kept separate from GORM models; responses omit authentication identifiers and newsletter verification tokens. SuperTokens sessions protect private routes. Catalog reads are public, bag operations are scoped to the signed-in user, and administrative writes require `User.IsAdmin`.
+
+Huma serves the OpenAPI document at `/openapi.json` and the interactive docs at `/docs`. Configure `ALLOWED_ORIGINS` with the exact React app origin. For example:
+
+```ts
+const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
+  credentials: "include",
+});
+if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+const products = await response.json();
+```
+
+SuperTokens handles authentication endpoints under `/auth`; use its React SDK for sign-in and session management. Login-method records are intentionally not exposed as CRUD routes, and newsletter verification tokens are never returned.
+
+### Square inventory webhook
+
+Configure `SQUARE_WEBHOOK_SIGNATURE_KEY` and `SQUARE_WEBHOOK_NOTIFICATION_URL` from the Square webhook subscription. The notification URL must exactly match the URL registered with Square because the Square SDK verifies the signature over that URL and the original request body. The endpoint is `POST /api/square/webhook`; it does not use a SuperTokens session, but rejects requests with missing or invalid Square signatures. `inventory.count.updated` events with a related catalog ITEM update the matching product, option, and variation records.
 
 ## Project layout (high level)
 

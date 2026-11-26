@@ -1,7 +1,7 @@
 package usersHttpTransport
 
 import (
-	"go-api-template/internal/transport/http/middlewares"
+	"github.com/neh333/KaininAPIV2/internal/transport/http/middlewares"
 
 	"github.com/go-chi/chi/v5"
 )

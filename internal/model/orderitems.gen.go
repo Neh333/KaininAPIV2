@@ -15,15 +15,13 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"go-api-template/internal/model"
 )
 
 func newOrderItem(db *gorm.DB, opts ...gen.DOOption) orderItem {
 	_orderItem := orderItem{}
 
 	_orderItem.orderItemDo.UseDB(db, opts...)
-	_orderItem.orderItemDo.UseModel(&model.OrderItem{})
+	_orderItem.orderItemDo.UseModel(&OrderItem{})
 
 	tableName := _orderItem.orderItemDo.TableName()
 	_orderItem.ALL = field.NewAsterisk(tableName)
@@ -206,57 +204,57 @@ func (o orderItemDo) Unscoped() *orderItemDo {
 	return o.withDO(o.DO.Unscoped())
 }
 
-func (o orderItemDo) Create(values ...*model.OrderItem) error {
+func (o orderItemDo) Create(values ...*OrderItem) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return o.DO.Create(values)
 }
 
-func (o orderItemDo) CreateInBatches(values []*model.OrderItem, batchSize int) error {
+func (o orderItemDo) CreateInBatches(values []*OrderItem, batchSize int) error {
 	return o.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (o orderItemDo) Save(values ...*model.OrderItem) error {
+func (o orderItemDo) Save(values ...*OrderItem) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return o.DO.Save(values)
 }
 
-func (o orderItemDo) First() (*model.OrderItem, error) {
+func (o orderItemDo) First() (*OrderItem, error) {
 	if result, err := o.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OrderItem), nil
+		return result.(*OrderItem), nil
 	}
 }
 
-func (o orderItemDo) Take() (*model.OrderItem, error) {
+func (o orderItemDo) Take() (*OrderItem, error) {
 	if result, err := o.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OrderItem), nil
+		return result.(*OrderItem), nil
 	}
 }
 
-func (o orderItemDo) Last() (*model.OrderItem, error) {
+func (o orderItemDo) Last() (*OrderItem, error) {
 	if result, err := o.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OrderItem), nil
+		return result.(*OrderItem), nil
 	}
 }
 
-func (o orderItemDo) Find() ([]*model.OrderItem, error) {
+func (o orderItemDo) Find() ([]*OrderItem, error) {
 	result, err := o.DO.Find()
-	return result.([]*model.OrderItem), err
+	return result.([]*OrderItem), err
 }
 
-func (o orderItemDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.OrderItem, err error) {
-	buf := make([]*model.OrderItem, 0, batchSize)
+func (o orderItemDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*OrderItem, err error) {
+	buf := make([]*OrderItem, 0, batchSize)
 	err = o.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -264,7 +262,7 @@ func (o orderItemDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) e
 	return results, err
 }
 
-func (o orderItemDo) FindInBatches(result *[]*model.OrderItem, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (o orderItemDo) FindInBatches(result *[]*OrderItem, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return o.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -290,23 +288,23 @@ func (o orderItemDo) Preload(fields ...field.RelationField) *orderItemDo {
 	return &o
 }
 
-func (o orderItemDo) FirstOrInit() (*model.OrderItem, error) {
+func (o orderItemDo) FirstOrInit() (*OrderItem, error) {
 	if result, err := o.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OrderItem), nil
+		return result.(*OrderItem), nil
 	}
 }
 
-func (o orderItemDo) FirstOrCreate() (*model.OrderItem, error) {
+func (o orderItemDo) FirstOrCreate() (*OrderItem, error) {
 	if result, err := o.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.OrderItem), nil
+		return result.(*OrderItem), nil
 	}
 }
 
-func (o orderItemDo) FindByPage(offset int, limit int) (result []*model.OrderItem, count int64, err error) {
+func (o orderItemDo) FindByPage(offset int, limit int) (result []*OrderItem, count int64, err error) {
 	result, err = o.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -335,7 +333,7 @@ func (o orderItemDo) Scan(result interface{}) (err error) {
 	return o.DO.Scan(result)
 }
 
-func (o orderItemDo) Delete(models ...*model.OrderItem) (result gen.ResultInfo, err error) {
+func (o orderItemDo) Delete(models ...*OrderItem) (result gen.ResultInfo, err error) {
 	return o.DO.Delete(models)
 }
 

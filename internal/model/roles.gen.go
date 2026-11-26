@@ -15,15 +15,13 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"go-api-template/internal/model"
 )
 
 func newRole(db *gorm.DB, opts ...gen.DOOption) role {
 	_role := role{}
 
 	_role.roleDo.UseDB(db, opts...)
-	_role.roleDo.UseModel(&model.Role{})
+	_role.roleDo.UseModel(&Role{})
 
 	tableName := _role.roleDo.TableName()
 	_role.ALL = field.NewAsterisk(tableName)
@@ -192,57 +190,57 @@ func (r roleDo) Unscoped() *roleDo {
 	return r.withDO(r.DO.Unscoped())
 }
 
-func (r roleDo) Create(values ...*model.Role) error {
+func (r roleDo) Create(values ...*Role) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return r.DO.Create(values)
 }
 
-func (r roleDo) CreateInBatches(values []*model.Role, batchSize int) error {
+func (r roleDo) CreateInBatches(values []*Role, batchSize int) error {
 	return r.DO.CreateInBatches(values, batchSize)
 }
 
 // Save : !!! underlying implementation is different with GORM
 // The method is equivalent to executing the statement: db.Clauses(clause.OnConflict{UpdateAll: true}).Create(values)
-func (r roleDo) Save(values ...*model.Role) error {
+func (r roleDo) Save(values ...*Role) error {
 	if len(values) == 0 {
 		return nil
 	}
 	return r.DO.Save(values)
 }
 
-func (r roleDo) First() (*model.Role, error) {
+func (r roleDo) First() (*Role, error) {
 	if result, err := r.DO.First(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Role), nil
+		return result.(*Role), nil
 	}
 }
 
-func (r roleDo) Take() (*model.Role, error) {
+func (r roleDo) Take() (*Role, error) {
 	if result, err := r.DO.Take(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Role), nil
+		return result.(*Role), nil
 	}
 }
 
-func (r roleDo) Last() (*model.Role, error) {
+func (r roleDo) Last() (*Role, error) {
 	if result, err := r.DO.Last(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Role), nil
+		return result.(*Role), nil
 	}
 }
 
-func (r roleDo) Find() ([]*model.Role, error) {
+func (r roleDo) Find() ([]*Role, error) {
 	result, err := r.DO.Find()
-	return result.([]*model.Role), err
+	return result.([]*Role), err
 }
 
-func (r roleDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*model.Role, err error) {
-	buf := make([]*model.Role, 0, batchSize)
+func (r roleDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error) (results []*Role, err error) {
+	buf := make([]*Role, 0, batchSize)
 	err = r.DO.FindInBatches(&buf, batchSize, func(tx gen.Dao, batch int) error {
 		defer func() { results = append(results, buf...) }()
 		return fc(tx, batch)
@@ -250,7 +248,7 @@ func (r roleDo) FindInBatch(batchSize int, fc func(tx gen.Dao, batch int) error)
 	return results, err
 }
 
-func (r roleDo) FindInBatches(result *[]*model.Role, batchSize int, fc func(tx gen.Dao, batch int) error) error {
+func (r roleDo) FindInBatches(result *[]*Role, batchSize int, fc func(tx gen.Dao, batch int) error) error {
 	return r.DO.FindInBatches(result, batchSize, fc)
 }
 
@@ -276,23 +274,23 @@ func (r roleDo) Preload(fields ...field.RelationField) *roleDo {
 	return &r
 }
 
-func (r roleDo) FirstOrInit() (*model.Role, error) {
+func (r roleDo) FirstOrInit() (*Role, error) {
 	if result, err := r.DO.FirstOrInit(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Role), nil
+		return result.(*Role), nil
 	}
 }
 
-func (r roleDo) FirstOrCreate() (*model.Role, error) {
+func (r roleDo) FirstOrCreate() (*Role, error) {
 	if result, err := r.DO.FirstOrCreate(); err != nil {
 		return nil, err
 	} else {
-		return result.(*model.Role), nil
+		return result.(*Role), nil
 	}
 }
 
-func (r roleDo) FindByPage(offset int, limit int) (result []*model.Role, count int64, err error) {
+func (r roleDo) FindByPage(offset int, limit int) (result []*Role, count int64, err error) {
 	result, err = r.Offset(offset).Limit(limit).Find()
 	if err != nil {
 		return
@@ -321,7 +319,7 @@ func (r roleDo) Scan(result interface{}) (err error) {
 	return r.DO.Scan(result)
 }
 
-func (r roleDo) Delete(models ...*model.Role) (result gen.ResultInfo, err error) {
+func (r roleDo) Delete(models ...*Role) (result gen.ResultInfo, err error) {
 	return r.DO.Delete(models)
 }
 

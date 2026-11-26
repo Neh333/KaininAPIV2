@@ -1,6 +1,6 @@
 package usersHttpTransport
 
-import "go-api-template/internal/service"
+import "github.com/neh333/KaininAPIV2/internal/service"
 
 func toCreateUserInput(request CreateUserRequest) service.CreateUserInput {
 	return service.CreateUserInput{

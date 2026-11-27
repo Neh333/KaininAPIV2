@@ -15,6 +15,7 @@ import (
 )
 
 func TestResponseDTOsOmitAuthenticationSecrets(t *testing.T) {
+	squareCustomerID := "private-square-customer-id"
 	tests := []struct {
 		name   string
 		value  any
@@ -25,8 +26,16 @@ func TestResponseDTOsOmitAuthenticationSecrets(t *testing.T) {
 			value: userResponse(model.User{
 				Email:             "user@example.com",
 				SupertokensUserID: "super-secret-user-id",
+				SquareCustomerID:  &squareCustomerID,
 			}),
 			secret: "super-secret-user-id",
+		},
+		{
+			name: "user square customer mapping",
+			value: userResponse(model.User{
+				SquareCustomerID: &squareCustomerID,
+			}),
+			secret: "private-square-customer-id",
 		},
 		{
 			name: "login method",

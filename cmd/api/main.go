@@ -19,7 +19,9 @@ import (
 	squarehandler "github.com/neh333/KaininAPIV2/internal/transport/http/square"
 	"github.com/sirupsen/logrus"
 	"github.com/supertokens/supertokens-golang/recipe/emailpassword"
+	"github.com/supertokens/supertokens-golang/recipe/multitenancy"
 	"github.com/supertokens/supertokens-golang/recipe/session"
+	"github.com/supertokens/supertokens-golang/recipe/thirdparty"
 	"github.com/supertokens/supertokens-golang/supertokens"
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
@@ -41,7 +43,7 @@ func main() {
 		logrus.WithError(err).Fatal("Failed to create the Azure credential")
 	}
 
-	client, err := azsecrets.NewClient(
+	azSecertsclient, err := azsecrets.NewClient(
 		"https://kaininkv.vault.azure.net/",
 		credential,
 		nil,
@@ -49,7 +51,7 @@ func main() {
 	if err != nil {
 		logrus.WithError(err).Fatal("Failed to create the Key Vault client")
 	}
-	connectionStringResponse, err := client.GetSecret(
+	connectionStringResponse, err := azSecertsclient.GetSecret(
 		context.Background(),
 		"KaininStoreUSDBConnString",
 		"",
@@ -136,10 +138,33 @@ func initializeSuperTokens(cfg config.ConfigSchema) error {
 	if websiteBasePath == "" {
 		websiteBasePath = "/auth"
 	}
+
+	credential, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		logrus.WithError(err).Fatal("Failed to create the Azure credential")
+	}
+	azSecertsclient, err := azsecrets.NewClient(
+		"https://kaininkv.vault.azure.net/",
+		credential,
+		nil,
+	)
+	if err != nil {
+		logrus.WithError(err).Fatal("Failed to create the Key Vault client")
+	}
+
+	superTokensAPIKeyResponse, err := azSecertsclient.GetSecret(
+		context.Background(),
+		"SuperTokenAPIKey",
+		"",
+		nil,
+	)
+	if err != nil {
+		logrus.WithError(err).Fatal("Failed to get the database connection string")
+	}
 	return supertokens.Init(supertokens.TypeInput{
 		Supertokens: &supertokens.ConnectionInfo{
 			ConnectionURI: cfg.SupertokensConnectionURI,
-			APIKey:        cfg.SupertokensAPIKey,
+			APIKey:        *superTokensAPIKeyResponse.Value,
 		},
 		AppInfo: supertokens.AppInfo{
 			AppName:         cfg.SupertokensAppName,
@@ -150,6 +175,8 @@ func initializeSuperTokens(cfg config.ConfigSchema) error {
 		},
 		RecipeList: []supertokens.Recipe{
 			emailpassword.Init(nil),
+			multitenancy.Init(nil),
+			thirdparty.Init(nil),
 			session.Init(nil),
 		},
 	})

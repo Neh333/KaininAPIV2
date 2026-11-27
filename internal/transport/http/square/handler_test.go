@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/neh333/KaininAPIV2/internal/service"
+	squareSDK "github.com/square/square-go-sdk/v5"
 	squarecore "github.com/square/square-go-sdk/v5/core"
 	squarewebhookclient "github.com/square/square-go-sdk/v5/webhooks/client"
 )
@@ -66,6 +67,62 @@ func TestReceiveWebhookFailsClosedWithoutConfiguration(t *testing.T) {
 
 	if response.Code != http.StatusServiceUnavailable {
 		t.Fatalf("expected status %d, got %d", http.StatusServiceUnavailable, response.Code)
+	}
+}
+
+func TestValidateShippingAddressNormalizesInput(t *testing.T) {
+	address := shippingAddress{
+		AddressLine1: "  123 Main St  ",
+		Locality:     " Seattle ",
+		PostalCode:   " 98101 ",
+		Country:      " us ",
+	}
+
+	if err := validateShippingAddress(&address); err != nil {
+		t.Fatalf("expected valid address, got error: %v", err)
+	}
+	if address.AddressLine1 != "123 Main St" || address.Locality != "Seattle" ||
+		address.PostalCode != "98101" || address.Country != "US" {
+		t.Fatalf("address was not normalized: %+v", address)
+	}
+}
+
+func TestValidateShippingAddressRejectsMissingFieldsAndInvalidCountry(t *testing.T) {
+	tests := []struct {
+		name    string
+		address shippingAddress
+	}{
+		{
+			name: "missing street",
+			address: shippingAddress{
+				Locality: "Seattle", PostalCode: "98101", Country: "US",
+			},
+		},
+		{
+			name: "invalid country",
+			address: shippingAddress{
+				AddressLine1: "123 Main St", Locality: "Seattle",
+				PostalCode: "98101", Country: "USA",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := validateShippingAddress(&tt.address); err == nil {
+				t.Fatal("expected invalid address to be rejected")
+			}
+		})
+	}
+}
+
+func TestAddressFromSquareHandlesOptionalFields(t *testing.T) {
+	address := addressFromSquare(&squareSDK.Address{})
+	if address == nil {
+		t.Fatal("expected an address response")
+	}
+	if address.AddressLine1 != "" || address.Country != "" {
+		t.Fatalf("expected empty optional fields, got %+v", address)
 	}
 }
 

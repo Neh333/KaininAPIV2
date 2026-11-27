@@ -78,11 +78,16 @@ Create `.env` from `.env.example`. Minimum keys to boot:
 - **SuperTokens**: `SUPERTOKENS_CONNECTION_URI`, `SUPERTOKENS_APP_NAME`, `SUPERTOKENS_API_DOMAIN`, `SUPERTOKENS_WEBSITE_DOMAIN`
 - **SuperTokens (optional)**: `SUPERTOKENS_API_KEY`, `SUPERTOKENS_API_BASE_PATH`, `SUPERTOKENS_WEBSITE_BASE_PATH`
 - **Square webhook (optional)**: `SQUARE_WEBHOOK_SIGNATURE_KEY`, `SQUARE_WEBHOOK_NOTIFICATION_URL`
+- **Square customer addresses**: `SQUARE_TOKEN` (server-side Square access token)
 - **Database**: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
 - **RabbitMQ (optional)**:
   - `RABBITMQ_ENABLED` (`true|false`)
   - `RABBITMQ_URL` (required when enabled)
   - `RABBITMQ_PREFETCH` (optional, default `20`)
+
+Google, Apple, and GitHub sign-in use SuperTokens' dynamic third-party providers.
+Configure each provider and its OAuth client credentials in SuperTokens Core, and
+register the provider's SuperTokens API callback URL with its OAuth application.
 
 Docker-first defaults (used by `docker-compose.yml`):
 
@@ -110,6 +115,10 @@ SuperTokens handles authentication endpoints under `/auth`; use its React SDK fo
 ### Square inventory webhook
 
 Configure `SQUARE_WEBHOOK_SIGNATURE_KEY` and `SQUARE_WEBHOOK_NOTIFICATION_URL` from the Square webhook subscription. The notification URL must exactly match the URL registered with Square because the Square SDK verifies the signature over that URL and the original request body. The endpoint is `POST /api/square/webhook`; it does not use a SuperTokens session, but rejects requests with missing or invalid Square signatures. `inventory.count.updated` events with a related catalog ITEM update the matching product, option, and variation records.
+
+### Account shipping address
+
+The authenticated endpoints `GET` and `PUT /api/account/shipping-address` read and update the signed-in user's default address in the Square Customer API. Set `SQUARE_TOKEN` in the API process environment; never expose it to the browser. Before deploying, apply `internal/migrations/sqlserver/20261126_add_square_customer_id.sql` to the API's SQL Server database. The API stores the Square customer ID on the app user and uses the app `UserID` as Square's `reference_id` when linking an existing profile. Order-specific shipping destinations should still be stored with each order.
 
 ## Project layout (high level)
 

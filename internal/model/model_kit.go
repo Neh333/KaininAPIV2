@@ -109,6 +109,7 @@ type User struct {
 	PhoneVerified     bool      `gorm:"column:PhoneVerified"`
 	LastLogin         time.Time `gorm:"column:LastLogin"`
 	SupertokensUserID string    `gorm:"column:supertokens_user_id"`
+	SquareCustomerID  *string   `gorm:"column:SquareCustomerID"`
 }
 
 // NullString is a helper wrapper around sql.NullString that handles the null case of the value when marshalling to JSON.

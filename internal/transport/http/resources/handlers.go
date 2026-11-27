@@ -4,11 +4,15 @@ import (
 	"context"
 	"errors"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/neh333/KaininAPIV2/internal/model"
 	"github.com/neh333/KaininAPIV2/internal/service/repositories"
+	"github.com/supertokens/supertokens-golang/recipe/emailpassword"
 	"github.com/supertokens/supertokens-golang/recipe/session"
+	"github.com/supertokens/supertokens-golang/recipe/thirdparty"
 	"gorm.io/gorm"
 )
 
@@ -84,10 +88,68 @@ func currentUser(ctx context.Context, db *gorm.DB) (model.User, error) {
 		Where("supertokens_user_id = ?", sessionContainer.GetUserID()).
 		Take(&user).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return model.User{}, huma.Error403Forbidden("No application user is linked to this session")
+		user, err = provisionApplicationUser(ctx, db, sessionContainer.GetUserID())
+		if err != nil {
+			return model.User{}, err
+		}
+		return user, nil
 	}
 	if err != nil {
 		return model.User{}, huma.Error500InternalServerError("Could not load the current user", err)
+	}
+	return user, nil
+}
+
+func provisionApplicationUser(ctx context.Context, db *gorm.DB, supertokensUserID string) (model.User, error) {
+	var email string
+	signupMethod := "unknown"
+
+	emailPasswordUser, err := emailpassword.GetUserByID(supertokensUserID)
+	if err != nil {
+		return model.User{}, huma.Error502BadGateway("Could not load the authenticated account from SuperTokens", err)
+	}
+	if emailPasswordUser != nil {
+		email = emailPasswordUser.Email
+		signupMethod = "emailpassword"
+	} else {
+		thirdPartyUser, err := thirdparty.GetUserByID(supertokensUserID)
+		if err != nil {
+			return model.User{}, huma.Error502BadGateway("Could not load the authenticated account from SuperTokens", err)
+		}
+		if thirdPartyUser == nil {
+			return model.User{}, huma.Error403Forbidden("The authenticated SuperTokens user could not be found")
+		}
+		email = thirdPartyUser.Email
+		signupMethod = thirdPartyUser.ThirdParty.ID
+	}
+	if strings.TrimSpace(email) == "" {
+		return model.User{}, huma.Error403Forbidden("An email address is required to create an application account")
+	}
+
+	user := model.User{
+		Email:             email,
+		IsAdmin:           false,
+		CreatedAt:         time.Now().UTC(),
+		SignupMethod:      signupMethod,
+		SupertokensUserID: supertokensUserID,
+	}
+	if err := db.WithContext(ctx).Create(&user).Error; err != nil {
+		// If another request provisioned this identity concurrently, return that
+		// row. Do not attach by email: that would silently merge identities.
+		var existing model.User
+		lookupErr := db.WithContext(ctx).
+			Where("supertokens_user_id = ?", supertokensUserID).
+			Take(&existing).Error
+		if lookupErr == nil {
+			return existing, nil
+		}
+		if !errors.Is(lookupErr, gorm.ErrRecordNotFound) {
+			return model.User{}, huma.Error500InternalServerError("Could not reload the current user", lookupErr)
+		}
+		return model.User{}, huma.Error409Conflict(
+			"Could not create an application account. If this email already belongs to an existing store account, contact support to link it.",
+			err,
+		)
 	}
 	return user, nil
 }

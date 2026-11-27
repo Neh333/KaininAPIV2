@@ -100,6 +100,8 @@ If you run services outside Docker, switch hosts to `localhost`.
 
 The API registers typed Huma operations in `internal/transport/http/resources`. Request and response DTOs are kept separate from GORM models; responses omit authentication identifiers and newsletter verification tokens. SuperTokens sessions protect private routes. Catalog reads are public, bag operations are scoped to the signed-in user, and administrative writes require `User.IsAdmin`.
 
+`GET /api/users/me` creates a basic non-admin application user on first access from the authenticated SuperTokens email/password or third-party identity. It never links identities solely by matching email. If that email already belongs to a legacy store account, the API returns `409 Conflict`; link the account through a verified account-linking process rather than changing the SuperTokens ID manually.
+
 Huma serves the OpenAPI document at `/openapi.json` and Scalar at `/docs`. Configure `ALLOWED_ORIGINS` with the exact React app origin. For example:
 
 ```ts
